@@ -96,9 +96,10 @@ h6,
 
 .form-control {
     font-size: 17px;
-    padding: 20px 15px;
+    padding: 5px 15px;
     -ms-border-radius: 9px;
     border-radius: 9px;
+    height: 44p;
 }
 
     .form-control:focus {
@@ -176,4 +177,13 @@ h6,
 
 .follows {
     list-style: none;
+}
+
+.gigs > li .actions {
+    font-size: 15px;
+    display: none;
+}
+
+.gigs > li:hover .actions {
+    display: block;
 }
