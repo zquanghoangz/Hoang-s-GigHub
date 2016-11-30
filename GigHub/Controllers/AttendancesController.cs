@@ -3,6 +3,7 @@ using GigHub.Models;
 using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Web.Http;
+using GigHub.Controllers.Api;
 
 namespace GigHub.Controllers
 {

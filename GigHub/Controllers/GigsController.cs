@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using GigHub.Controllers.Api;
 
 namespace GigHub.Controllers
 {
@@ -22,7 +23,10 @@ namespace GigHub.Controllers
         {
             var userId = User.Identity.GetUserId();
             var gigs = _context.Gigs
-                .Where(g => g.ArtistId == userId && g.DateTime > DateTime.Now)
+                .Where(g =>
+                    g.ArtistId == userId &&
+                    g.DateTime > DateTime.Now &&
+                    !g.IsCanceled)
                 .Include(g => g.Genre)
                 .ToList();
 
@@ -101,6 +105,9 @@ namespace GigHub.Controllers
                 Venue = viewModel.Venue
             };
 
+            var attendees = _context.Users.ToList();
+            gig.Create(attendees);
+
             _context.Gigs.Add(gig);
             _context.SaveChanges();
 
@@ -118,11 +125,13 @@ namespace GigHub.Controllers
                 return View("GigsForm", viewModel);
             }
 
-            string userId=User.Identity.GetUserId();
-            var gig = _context.Gigs.Single(g=>g.Id==viewModel.Id && g.ArtistId==userId);
-            gig.Venue = viewModel.Venue;
-            gig.DateTime = viewModel.GetDateTime();
-            gig.GenreId = viewModel.Genre;
+
+            string userId = User.Identity.GetUserId();
+            var gig = _context.Gigs
+                .Include(g => g.Attendances.Select(a => a.Attendee))
+                .Single(g => g.Id == viewModel.Id && g.ArtistId == userId);
+
+            gig.Modify(viewModel.GetDateTime(), viewModel.Venue, viewModel.Genre);
 
             _context.SaveChanges();
 

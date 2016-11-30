@@ -1,33 +1,77 @@
 ﻿@model IEnumerable<GigHub.Models.Gig>
-    @{
-        ViewBag.Title = "Mine";
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+@{
+    ViewBag.Title = "Mine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <h1>My upcoming Gigs</h1>
-    <ul class="gigs voffset4">
-        @foreach (var gig in Model)
-        {
-            <li>
-                <div class="date">
-                    <div class="month">
-                        @gig.DateTime.ToString("MMM")
-                    </div>
-                    <div class="day">
-                        @gig.DateTime.ToString("d ")
-                    </div>
+<h1>My upcoming Gigs</h1>
+<ul class="gigs voffset4">
+    @foreach (var gig in Model)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @gig.DateTime.ToString("MMM")
                 </div>
-                <div class="details">
-                    <span class="artist">
+                <div class="day">
+                    @gig.DateTime.ToString("d ")
+                </div>
+            </div>
+            <div class="details">
+                <span class="artist">
                         @gig.Venue
                     </span>
-                    <span class="genre">
+                <span class="genre">
                         @gig.Genre.Name
                     </span>
-                    <div class="actions">
-                        <a href="@Url.Action("Edit","Gigs",new {id=gig.Id})">Edit</a>
-                    </div>
+                <div class="actions">
+                    <a href="@Url.Action("Edit", "Gigs", new {id = gig.Id})">Edit</a> |
+                    <a class="js-cancel-gig" data-gig-id="@gig.Id">Cancel</a>
                 </div>
-            </li>
-        }
-    </ul>
+            </div>
+        </li>
+    }
+</ul>
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $(".js-cancel-gig").click(function(e) {
+                var link = $(e.target);
+
+                bootbox.confirm({
+                    message: "Are you sure you want to delete this gig?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-default'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                url: "/api/gigs/" + link.attr("data-gig-id"),
+                                method: "DELETE"
+                            })
+                                .done(function () {
+                                    link.parents("li").fadeOut(function () {
+                                        $(this).remove();
+                                    });
+                                })
+                                .fail(function () {
+                                    alert("Something failed!");
+                                });
+                        }
+                    }
+                });
+
+                //bootbox.confirm("Are you sure you want to delete this gig?", function(result) {});
+                //if (confirm("Are you sure you want to delete this gig?")) {}
+            });
+        });
+    </script>
+}
