@@ -28,18 +28,46 @@ span.field-validation-error {
     font-weight: bold;
 }
 
-.voffset{ margin-top: 2px;}
-.voffset1{ margin-top: 5px;}
-.voffset2{ margin-top: 10px;}
-.voffset3{ margin-top: 20px;}
-.voffset4{ margin-top: 40px;}
-.voffset5{ margin-top: 80px;}
+.voffset {
+    margin-top: 2px;
+}
+
+.voffset1 {
+    margin-top: 5px;
+}
+
+.voffset2 {
+    margin-top: 10px;
+}
+
+.voffset3 {
+    margin-top: 20px;
+}
+
+.voffset4 {
+    margin-top: 40px;
+}
+
+.voffset5 {
+    margin-top: 80px;
+}
 
 /* Bootstrap Overrides */
 .navbar-inverse {
     background-color: #FF4342;
     border-color: #FF4342;
 }
+
+    .navbar-inverse .notifications {
+        position: relative;
+    }
+
+        .navbar-inverse .notifications .badge {
+            position: absolute;
+            top: 10px;
+            left: 23px;
+            background: #a80a0a;
+        }
 
     .navbar-inverse .navbar-nav > li > a {
         color: #FFFFFF;
